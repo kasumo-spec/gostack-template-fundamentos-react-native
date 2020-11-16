@@ -1,7 +1,6 @@
 /* eslint-disable import/first */
 
 import React from 'react';
-import { mocked } from 'ts-jest/utils';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 import {
@@ -25,6 +24,8 @@ jest.mock('@react-native-community/async-storage', () => ({
 }));
 
 import AsyncStorage from '@react-native-community/async-storage';
+import { mocked } from 'ts-jest/utils';
+
 import { CartProvider, useCart } from '../../hooks/cart';
 
 const TestComponent: React.FC = () => {
@@ -62,7 +63,7 @@ const TestComponent: React.FC = () => {
         Decrement
       </TouchableOpacity>
 
-      {products.map(product => (
+      {products.map((product) => (
         <View key={product.id}>
           <Text>{product.title}</Text>
           <Text>{product.quantity}</Text>
@@ -139,7 +140,7 @@ describe('Cart Context', () => {
 
   it('should load products from AsyncStorage', async () => {
     mockedAsyncStorage.getItem.mockReturnValue(
-      new Promise(resolve =>
+      new Promise((resolve) =>
         resolve(
           JSON.stringify([
             {

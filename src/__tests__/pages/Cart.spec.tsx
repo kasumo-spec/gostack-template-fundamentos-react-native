@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import { mocked } from 'ts-jest/utils';
 import { render, fireEvent, act } from '@testing-library/react-native';
+import { mocked } from 'ts-jest/utils';
 
 jest.mock('../../hooks/cart.tsx', () => ({
   __esModule: true,
@@ -15,11 +15,11 @@ jest.mock('../../hooks/cart.tsx', () => ({
 
 jest.mock('../../utils/formatValue.ts', () => ({
   __esModule: true,
-  default: jest.fn().mockImplementation(value => value),
+  default: jest.fn().mockImplementation((value) => value),
 }));
 
-import Cart from '../../pages/Cart';
 import { useCart } from '../../hooks/cart';
+import Cart from '../../pages/Cart';
 
 const useCartMocked = mocked(useCart);
 

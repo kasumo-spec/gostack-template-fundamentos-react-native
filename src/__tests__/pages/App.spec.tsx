@@ -2,10 +2,9 @@
 
 import React from 'react';
 
-import { mocked } from 'ts-jest/utils';
 import { render, fireEvent, act, wait } from '@testing-library/react-native';
 import AxiosMock from 'axios-mock-adapter';
-import api from '../../services/api';
+import { mocked } from 'ts-jest/utils';
 
 jest.mock('@react-navigation/native', () => {
   // Require the original module to not be mocked...
@@ -26,8 +25,9 @@ jest.mock('../../hooks/cart.tsx', () => ({
   }),
 }));
 
-import Dashboard from '../../pages/Dashboard';
 import { useCart } from '../../hooks/cart';
+import Dashboard from '../../pages/Dashboard';
+import api from '../../services/api';
 
 const apiMock = new AxiosMock(api);
 

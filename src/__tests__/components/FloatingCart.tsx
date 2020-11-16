@@ -2,9 +2,9 @@
 
 import React from 'react';
 
-import { mocked } from 'ts-jest/utils';
-import { render, fireEvent, act } from '@testing-library/react-native';
 import { useNavigation } from '@react-navigation/native';
+import { render, fireEvent, act } from '@testing-library/react-native';
+import { mocked } from 'ts-jest/utils';
 
 jest.mock('@react-navigation/native', () => {
   const originalModule = jest.requireActual('@react-navigation/native');
@@ -26,7 +26,7 @@ jest.mock('../../hooks/cart.tsx', () => ({
 
 jest.mock('../../utils/formatValue.ts', () => ({
   __esModule: true,
-  default: jest.fn().mockImplementation(value => value),
+  default: jest.fn().mockImplementation((value) => value),
 }));
 
 import FloatingCart from '../../components/FloatingCart';
