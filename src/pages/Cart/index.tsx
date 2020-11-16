@@ -1,7 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
+import { View } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
-import { View } from 'react-native';
+import { useCart } from '../../hooks/cart';
+import formatValue from '../../utils/formatValue';
 
 import {
   Container,
@@ -23,10 +25,6 @@ import {
   SubtotalValue,
 } from './styles';
 
-import { useCart } from '../../hooks/cart';
-
-import formatValue from '../../utils/formatValue';
-
 interface Product {
   id: string;
   title: string;
@@ -38,24 +36,34 @@ interface Product {
 const Cart: React.FC = () => {
   const { increment, decrement, products } = useCart();
 
-  function handleIncrement(id: string): void {
-    // TODO
-  }
+  const handleIncrement = useCallback(
+    (id: string): void => {
+      increment(id);
+    },
+    [increment],
+  );
 
-  function handleDecrement(id: string): void {
-    // TODO
-  }
+  const handleDecrement = useCallback(
+    (id: string): void => {
+      decrement(id);
+    },
+    [decrement],
+  );
 
   const cartTotal = useMemo(() => {
-    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    const valueTotalProducts = products.reduce((accumulator, product) => {
+      return accumulator + product.quantity * product.price;
+    }, 0);
 
-    return formatValue(0);
+    return formatValue(valueTotalProducts);
   }, [products]);
 
   const totalItensInCart = useMemo(() => {
-    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    const qtdProducts = products.reduce((accumulator, product) => {
+      return accumulator + product.quantity;
+    }, 0);
 
-    return 0;
+    return qtdProducts;
   }, [products]);
 
   return (
@@ -63,7 +71,7 @@ const Cart: React.FC = () => {
       <ProductContainer>
         <ProductList
           data={products}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           ListFooterComponent={<View />}
           ListFooterComponentStyle={{
             height: 80,
@@ -90,14 +98,12 @@ const Cart: React.FC = () => {
               <ActionContainer>
                 <ActionButton
                   testID={`increment-${item.id}`}
-                  onPress={() => handleIncrement(item.id)}
-                >
+                  onPress={() => handleIncrement(item.id)}>
                   <FeatherIcon name="plus" color="#E83F5B" size={16} />
                 </ActionButton>
                 <ActionButton
                   testID={`decrement-${item.id}`}
-                  onPress={() => handleDecrement(item.id)}
-                >
+                  onPress={() => handleDecrement(item.id)}>
                   <FeatherIcon name="minus" color="#E83F5B" size={16} />
                 </ActionButton>
               </ActionContainer>

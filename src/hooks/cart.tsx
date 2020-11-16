@@ -18,7 +18,7 @@ interface Product {
 
 interface CartContext {
   products: Product[];
-  addToCart(item: Omit<Product, 'quantity'>): void;
+  addToCart(item: Product): void;
   increment(id: string): void;
   decrement(id: string): void;
 }
@@ -31,22 +31,77 @@ const CartProvider: React.FC = ({ children }) => {
   useEffect(() => {
     async function loadProducts(): Promise<void> {
       // TODO LOAD ITEMS FROM ASYNC STORAGE
+      const data = await AsyncStorage.getItem('@GoMarketplace:product');
+
+      if (data) {
+        setProducts(JSON.parse(data));
+      }
     }
 
     loadProducts();
   }, []);
 
-  const addToCart = useCallback(async product => {
-    // TODO ADD A NEW ITEM TO THE CART
-  }, []);
+  useEffect(() => {
+    async function setAsyncStorage(): Promise<void> {
+      await AsyncStorage.setItem(
+        '@GoMarketplace:product',
+        JSON.stringify(products),
+      );
+    }
+    if (products) {
+      setAsyncStorage();
+    }
+  }, [products]);
 
-  const increment = useCallback(async id => {
-    // TODO INCREMENTS A PRODUCT QUANTITY IN THE CART
-  }, []);
+  const addToCart = useCallback(
+    async (product) => {
+      const findProduct = products.find(
+        (oldProduct) => oldProduct.id === product.id,
+      );
 
-  const decrement = useCallback(async id => {
-    // TODO DECREMENTS A PRODUCT QUANTITY IN THE CART
-  }, []);
+      if (findProduct) {
+        setProducts(
+          products.map((p) => {
+            if (p.id === product.id) {
+              return { ...findProduct, quantity: findProduct.quantity + 1 };
+            }
+            return p;
+          }),
+        );
+      } else {
+        setProducts([...products, { ...product, quantity: 1 }]);
+      }
+    },
+    [products],
+  );
+
+  const increment = useCallback(
+    async (id) => {
+      setProducts(
+        products.map((product) =>
+          product.id === id
+            ? { ...product, quantity: product.quantity + 1 }
+            : product,
+        ),
+      );
+    },
+    [products],
+  );
+
+  const decrement = useCallback(
+    async (id) => {
+      setProducts(
+        products
+          .map((product) =>
+            product.id === id
+              ? { ...product, quantity: product.quantity - 1 }
+              : product,
+          )
+          .filter((product) => product.quantity > 0),
+      );
+    },
+    [products],
+  );
 
   const value = React.useMemo(
     () => ({ addToCart, increment, decrement, products }),
@@ -60,7 +115,7 @@ function useCart(): CartContext {
   const context = useContext(CartContext);
 
   if (!context) {
-    throw new Error(`useCart must be used within a CartProvider`);
+    throw new Error('useCart must be used within a CartProvider');
   }
 
   return context;

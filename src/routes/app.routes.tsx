@@ -1,14 +1,12 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-
 import { Image } from 'react-native';
-
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
-import Dashboard from '../pages/Dashboard';
-import Cart from '../pages/Cart';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import Logo from '../assets/logo.png';
+import Cart from '../pages/Cart';
+import Dashboard from '../pages/Dashboard';
 
 const App = createStackNavigator();
 
@@ -17,9 +15,9 @@ const AppRoutes: React.FC = () => (
     screenOptions={{
       headerShown: true,
       cardStyle: { backgroundColor: '#EBEEF8' },
+      headerTitleAlign: 'center',
     }}
-    initialRouteName="Dashboard"
-  >
+    initialRouteName="Dashboard">
     <App.Screen
       options={{
         headerShown: true,
